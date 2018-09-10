@@ -1,0 +1,165 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Comfortaa', cursive;
+  background-image: url("https://wallpapersite.com/images/wallpapers/miui-8-2560x1440-rainy-weather-background-minimal-hd-10471.png");
+  background-position: bottom;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+#container{
+  /*background-color: #eeee; */
+  border: 0 solid gray;
+  margin: 30px auto 0 auto;
+  opacity: 1;
+  width: 100%;
+}
+
+#contents{
+  min-height: 390px;
+}
+
+#search{
+  text-align: center;
+}
+
+#search_bar{
+  width: 40%;
+  height: 42px;
+  background-color: #eeee;
+  border-width: 0;
+  text-align: center;
+  padding-left: 5px;
+  transition-property: width background-color;
+  transition-duration: 0.6s;
+  transition-timing-function: ease-in;
+}
+
+#search_bar:focus {
+  text-align: left;
+  width: 43%;
+  background-color: white;
+}
+
+@keyframes align {
+  0%{text-align: center;}
+  100%{text-align: left;}
+}
+
+#submit{
+  width: 50px;
+  height: 44px;
+  border: 1px solid gray;
+  cursor: pointer;
+  position: relative;
+  right: 1px;
+  background-color: gray;
+}
+
+#search_icon{
+  color: #494949;
+  font-size: 1.5em;
+  position: absolute;
+  margin-top: 10px;
+  margin-left: -40px;
+  cursor: pointer;
+}
+
+#location{
+  text-align: center;
+  margin: 10px auto 0 auto;
+  width: 180px;
+  color: #494949;
+}
+
+#location i{
+  font-size: 2em;
+  color: #494949;
+}
+
+#location:hover {
+  color: black;
+  cursor: pointer;
+}
+
+#location:hover i {
+  color: black;
+  cursor: pointer;
+}
+
+#weather_list{
+  padding: 0;
+  margin: 0;
+  text-align: center;
+}
+
+#weather_list li{
+    list-style: none;
+    display: inline-block;
+    padding: 5px;
+    margin: 0 auto 0 auto;
+}
+
+.weather{
+  width: 300px;
+  height: 250px;
+  background-color: #eeee;
+  border: 0 solid #eeee;
+  margin: 20px auto 0 auto;
+  padding: 10px;
+  border-radius: 8px;
+  background-position: 120px 40px;
+  background-size: 190px 190px;
+  background-repeat: no-repeat;
+  color: #494949;
+}
+
+.weather:hover{
+  animation-name: anim;
+  animation-duration: 1s;
+  animation-delay: 0;
+  animation-fill-mode: forwards;
+  cursor: pointer;
+}
+
+@keyframes anim {
+    0%{background-color: #eeee; color: #494949;}
+    100%{background-color: white; color: #494949;}
+}
+
+.location{
+  font-size: 1.5em;
+}
+
+.temperature{
+  text-align: left;
+  margin-left: 20px;
+  padding: 40px 0 30px 0;
+  font-size: 3em;
+}
+
+.weather_state_name{
+  text-align: left;
+  padding: 0 0 10px 0;
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.humidity, .air_pressure{
+  padding: 5px 0 10px 0;
+  text-align: left;
+}
+
+#footer{
+  height: 200px;
+  margin-top: 50px;
+  background-color: #eeee;
+  opacity: 0.8;
+}
+
+#version{
+  font-size: 0.8em;
+  padding: 10px;
+}
