@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import {BrowserRouter as Router, Route, Link, Switch} from 'react-router-dom'
 
 class Container extends React.Component{
   constructor(props){
@@ -50,7 +51,7 @@ class Container extends React.Component{
   }
 
   weather_list(woeid_lst){
-    return woeid_lst.map(woeid=> <li> <Weather woeid={woeid} /> </li> );
+    return woeid_lst.map(woeid=> <li> <Link style={ {'text-decoration': 'none'} } to={`${woeid}`}> <Weather woeid={woeid} /> </Link></li> );
   }
 
   render(props){
@@ -66,6 +67,73 @@ class Container extends React.Component{
                </ul>
               </div>
               <Footer/>
+           </div>;
+  }
+}
+
+function Ren(prop) {
+  return <Router>
+              <div>
+              <Route exact path="/" component={Container} />
+              <Route path="/:woeid" component={LocationWeather} />
+              </div>
+         </Router>;
+}
+
+class LocationWeather extends React.Component{
+  constructor(props){
+    super(props);
+    this.state={
+      weather: {title: "Loading..", weather_state_name: 'Unknown State', humidity: 0, air_pressure: 0, the_temp: 0, weather_state_abbr: 'No'}
+    };
+  }
+
+  componentDidMount(){
+    this.timerID=this.get_weather();
+  }
+
+  componentWillUnmount(){
+     delete this.timerID;
+  }
+
+  get_weather(props){
+    let woeid=this.props.match.params.woeid;
+    let hit=sessionStorage.getItem(this.props.match.params.woeid);
+      fetch(`http://127.0.0.1:8000/router/weather?url=https://www.metaweather.com/api/location/${woeid}/`)
+      .then(response=>response.json())
+      .then(results=>{
+        let json_results=JSON.stringify(results);
+        let cache=sessionStorage.getItem(woeid);
+        if(cache !== json_results){
+           this.setState({ weather: JSON.parse( json_results ).weather });
+           sessionStorage.setItem(woeid, JSON.stringify(results) );
+        }
+       } )
+      .catch( error=> console.log(error) );
+  }
+
+  render(props){
+    let woeid=this.props.match.params.woeid;
+    let hit=sessionStorage.getItem(woeid);
+    if(hit){
+      hit=JSON.parse(hit).weather;
+    }
+    else{
+      hit=this.state.weather;
+    }
+    const styles = { 'background-image': `url("https://www.metaweather.com/static/img/weather/${hit.weather_state_abbr}.svg")`};
+    return <div class="location-weather" style={styles}>
+             <div class="location-location"> <span>{hit.title}</span> </div>
+             <div class="location-temperature"> {Math.round(hit.the_temp)} ℃ </div>
+             <div class="location-weather_state_name"> {hit.weather_state_name} </div>
+             <div class="location-air_pressure">Humidity: &nbsp; &nbsp; {hit.humidity}%</div>
+             <div class="location-air_pressure">Air Pressure: &nbsp; &nbsp; {Math.round(hit.air_pressure)}mb </div>
+             <div class="location-air_pressure">Wind Direction: &nbsp; &nbsp; {hit.wind_speed} {hit.wind_direction_compass} </div>
+             <div class="location-air_pressure">Applicable Date: &nbsp; &nbsp; {hit.applicable_date} </div>
+             <div class="location-air_pressure">Predictability: &nbsp; &nbsp; {hit.Predictability}% </div>
+             <div class="location-air_pressure">Timezone: &nbsp; &nbsp; {hit.timezone} </div>
+             <div class="location-air_pressure">Sunrise: &nbsp; &nbsp; {hit.sun_rise} </div>
+             <div class="location-air_pressure">Sunset: &nbsp; &nbsp; {hit.sun_set} </div>
            </div>;
   }
 }
@@ -93,7 +161,7 @@ class Weather extends React.Component{
       .then(results=>{
         let json_results=JSON.stringify(results);
         let cache=sessionStorage.getItem(this.props.woeid);
-        if(cache!==json_results){
+        if(cache !== json_results){
            this.setState({ weather: JSON.parse( json_results ).weather });
            sessionStorage.setItem(this.props.woeid, JSON.stringify(results) );
         }
@@ -159,4 +227,4 @@ class Footer extends React.Component{
 //present on current session(dissapear when browser closed)
 // sessionStorage.setItem('myData', data);
 // sessionStorage.getItem('myData');
-ReactDOM.render(<Container/>, document.getElementById("root"));
+ReactDOM.render(<Ren/>, document.getElementById("root"));
