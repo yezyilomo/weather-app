@@ -7,10 +7,11 @@ body {
   background-size: 100% 100%;
   background-repeat: no-repeat;
   background-attachment: fixed;
+  min-width: 300px;
 }
 
 #container{
-  /*background-color: #eeee; */
+  /*background-color: #eeeeee; */
   border: 0 solid gray;
   margin: 30px auto 0 auto;
   opacity: 1;
@@ -18,29 +19,46 @@ body {
 }
 
 #contents{
-  min-height: 390px;
+  min-height: calc(100vh - 280px);
 }
 
 #search{
   text-align: center;
 }
-
+#search-container{
+  height: 45px;
+  overflow: hidden;
+  margin: 0 auto 0 auto;
+}
 #search_bar{
   width: 40%;
-  height: 42px;
-  background-color: #eeee;
+  height: 45px;
+  background-color: #eeeeee;
   border-width: 0;
   text-align: center;
   padding-left: 5px;
   transition-property: width background-color;
   transition-duration: 0.6s;
   transition-timing-function: ease-in;
+  display: inline-flex;
+  position: relative;
+  bottom: 5px;
+  font-family: 'Comfortaa', cursive;
 }
 
 #search_bar:focus {
   text-align: left;
   width: 43%;
   background-color: white;
+}
+
+@media (max-width: 800px) {
+  #search_bar{
+    width: 80%;
+  }
+  #search_bar:focus{
+    width: 80%;
+  }
 }
 
 @keyframes align {
@@ -50,21 +68,62 @@ body {
 
 #submit{
   width: 50px;
-  height: 44px;
-  border: 1px solid gray;
+  height: 45px;
+  border: 0 solid gray;
   cursor: pointer;
-  position: relative;
-  right: 1px;
   background-color: gray;
+  display: inline-flex;
+  margin: 0;
+  padding: 0;
 }
 
 #search_icon{
   color: #494949;
-  font-size: 1.5em;
-  position: absolute;
-  margin-top: 10px;
-  margin-left: -40px;
+  font-size: 1.7em;
   cursor: pointer;
+  margin-left: 10px;
+}
+
+.autocomplete{
+ margin: 0;
+ padding: 0;
+ position: absolute;
+ top: 76px;
+ display: inline-block;
+ width: 43.4%;
+ max-height: 378px;
+ overflow-y: auto;
+ background-color: white;
+ border: 0px solid #eeeeee;
+}
+
+#search-results{
+  display: none;
+}
+
+.result-link{
+  display: block;
+  padding: 12px 0 12px 0;
+}
+
+.result-link:focus, .weather-link{
+  outline: none;
+}
+
+.suggestions{
+  margin: 0;
+  padding: 0;
+}
+
+.suggestions li{
+ list-style: none;
+ text-align: left;
+ padding-left: 10px;
+ cursor: pointer;
+}
+
+.suggestions li:hover{
+  background-color: #00687E;
 }
 
 #location{
@@ -105,8 +164,8 @@ body {
 .weather{
   width: 300px;
   height: 250px;
-  background-color: #eeee;
-  border: 0 solid #eeee;
+  background-color: #eeeeee;
+  border: 0 solid #eeeeee;
   margin: 20px auto 0 auto;
   padding: 10px;
   border-radius: 8px;
@@ -125,7 +184,7 @@ body {
 }
 
 @keyframes anim {
-    0%{background-color: #eeee; color: #494949;}
+    0%{background-color: #eeeeee; color: #494949;}
     100%{background-color: white; color: #494949;}
 }
 
@@ -152,22 +211,52 @@ body {
   text-align: left;
 }
 
-.location-weather{
-  width: 80%;
-  height: 500px;
-  background-color: #eeee;
-  border: 0 solid #eeee;
-  margin: 100px auto 0 auto;
-  padding: 10px;
-  border-radius: 8px;
-  background-position: 20px 10px;
-  background-size: 100% 450px;
-  background-repeat: no-repeat;
-  color: #494949;
+.modal-parent{
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 2;
 }
 
-.location-location{
+.location-weather{
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 3;
+  max-width: 65%;
+  height: 450px;
+  background-color: white;
+  border: 20px solid white;
+  margin: 78px auto 0 auto;
+  padding: 0 0 20px 0;
+  border-radius: 8px;
+  background-position: right 20px;
+  background-size: 50%;
+  background-repeat: no-repeat;
+  color: #494949;
+  overflow: hidden;
+}
+.close-icon{
+  float: right;
+  cursor: pointer;
+  position: relative;
+}
+.close-icon i{
   font-size: 1.5em;
+  transition-property: color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
+}
+.close-icon:hover i{
+  color: #e04c4c;
+}
+.location-location{
+  font-size: 1.6em;
 }
 
 .location-temperature{
@@ -184,15 +273,15 @@ body {
   font-weight: bold;
 }
 
-.location-humidity, .location-air_pressure{
-  padding: 5px 0 10px 0;
+.location-weather [class^=location]{
+  padding: 10px 0 10px 0;
   text-align: left;
 }
 
 #footer{
   height: 200px;
   margin-top: 50px;
-  background-color: #eeee;
+  background-color: #eeeeee;
   opacity: 0.8;
 }
 

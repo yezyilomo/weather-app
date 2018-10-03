@@ -1,7 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import {BrowserRouter as Router, Route, Link, Switch} from 'react-router-dom'
+import {BrowserRouter as Router, Route, Link, Switch} from 'react-router-dom';
+
+let apiUrl='http://127.0.0.1:8000';
+//let apiUrl='http://c2303014.ngrok.io';
 
 class Container extends React.Component{
   constructor(props){
@@ -31,7 +34,7 @@ class Container extends React.Component{
 
   get_woeid(){
     this.setState({woeid: []});
-    fetch(`http://127.0.0.1:8000/router/woeid?url=https://www.metaweather.com/api/location/search/?lattlong=${this.state.lat},${this.state.long}`)
+    fetch(`${apiUrl}/router/woeid?url=https://www.metaweather.com/api/location/search/?lattlong=${this.state.lat},${this.state.long}`)
     .then(response => response.json())
     .then(results => this.setState({ woeid: Object.values( JSON.parse( JSON.stringify(results) ).data ).map(val=>val.woeid) }) )
     .catch(error => console.log(error));
@@ -39,7 +42,7 @@ class Container extends React.Component{
 
   search_woeid(location){
     this.setState({woeid: []});
-    fetch(`http://127.0.0.1:8000/router/woeid?url=https://www.metaweather.com/api/location/search/?query=${location}`)
+    fetch(`${apiUrl}/router/woeid?url=https://www.metaweather.com/api/location/search/?query=${location}`)
     .then(response => response.json())
     .then(results => this.setState({ woeid: Object.values( JSON.parse( JSON.stringify(results) ).data ).map(val=>val.woeid) }) )
     .catch(error => console.log(error));
@@ -51,7 +54,7 @@ class Container extends React.Component{
   }
 
   weather_list(woeid_lst){
-    return woeid_lst.map(woeid=> <li> <Link style={ {'text-decoration': 'none'} } to={`${woeid}`}> <Weather woeid={woeid} /> </Link></li> );
+    return woeid_lst.map(woeid=> <li> <Link class="weather-link" style={ {'text-decoration': 'none'} } key={`${woeid}`}  to={{ pathname: `woeid/${woeid}`, state: { modal: true } }} > <Weather woeid={woeid} /> </Link></li> );
   }
 
   render(props){
@@ -65,22 +68,17 @@ class Container extends React.Component{
                <ul id="weather_list">
                   {this.weather_list(this.state.woeid)}
                </ul>
+               <Route exact path="/" component={null} />
+               <Route path="/woeid/:woeid" component={WeatherModal} />
+               <Route path="/search/:key" component={null} />
               </div>
               <Footer/>
            </div>;
   }
 }
 
-function Ren(prop) {
-  return <Router>
-              <div>
-              <Route exact path="/" component={Container} />
-              <Route path="/:woeid" component={LocationWeather} />
-              </div>
-         </Router>;
-}
 
-class LocationWeather extends React.Component{
+class WeatherModal extends React.Component{
   constructor(props){
     super(props);
     this.state={
@@ -99,7 +97,7 @@ class LocationWeather extends React.Component{
   get_weather(props){
     let woeid=this.props.match.params.woeid;
     let hit=sessionStorage.getItem(this.props.match.params.woeid);
-      fetch(`http://127.0.0.1:8000/router/weather?url=https://www.metaweather.com/api/location/${woeid}/`)
+      fetch(`${apiUrl}/router/weather?url=https://www.metaweather.com/api/location/${woeid}/`)
       .then(response=>response.json())
       .then(results=>{
         let json_results=JSON.stringify(results);
@@ -121,20 +119,32 @@ class LocationWeather extends React.Component{
     else{
       hit=this.state.weather;
     }
+
+    let isModal=false;
+    try {
+      isModal=this.props.location.state.modal;
+    }
+    catch (e) {
+       isModal=false;
+    }
+    let back = e => {e.stopPropagation(); this.props.history.goBack();} ;
     const styles = { 'background-image': `url("https://www.metaweather.com/static/img/weather/${hit.weather_state_abbr}.svg")`};
-    return <div class="location-weather" style={styles}>
-             <div class="location-location"> <span>{hit.title}</span> </div>
-             <div class="location-temperature"> {Math.round(hit.the_temp)} ℃ </div>
-             <div class="location-weather_state_name"> {hit.weather_state_name} </div>
-             <div class="location-air_pressure">Humidity: &nbsp; &nbsp; {hit.humidity}%</div>
-             <div class="location-air_pressure">Air Pressure: &nbsp; &nbsp; {Math.round(hit.air_pressure)}mb </div>
-             <div class="location-air_pressure">Wind Direction: &nbsp; &nbsp; {hit.wind_speed} {hit.wind_direction_compass} </div>
-             <div class="location-air_pressure">Applicable Date: &nbsp; &nbsp; {hit.applicable_date} </div>
-             <div class="location-air_pressure">Predictability: &nbsp; &nbsp; {hit.Predictability}% </div>
-             <div class="location-air_pressure">Timezone: &nbsp; &nbsp; {hit.timezone} </div>
-             <div class="location-air_pressure">Sunrise: &nbsp; &nbsp; {hit.sun_rise} </div>
-             <div class="location-air_pressure">Sunset: &nbsp; &nbsp; {hit.sun_set} </div>
-           </div>;
+    const weather = <div class="location-weather" style={styles}>
+                     <span class="close-icon" onClick={back}><i class="fas fa-times"></i> </span>
+                     <div class="location-location"> <span>{hit.title}</span> </div>
+                     <div class="location-temperature"> {Math.round(hit.the_temp)} ℃ </div>
+                     <div class="location-weather_state_name"> {hit.weather_state_name} </div>
+                     <div class="location-humidity">Humidity: &nbsp; &nbsp; {hit.humidity}%</div>
+                     <div class="location-air_pressure">Air Pressure: &nbsp; &nbsp; {Math.round(hit.air_pressure)}mb </div>
+                     <div class="location-wind_direction">Wind Direction: &nbsp; &nbsp; {hit.wind_speed} {hit.wind_direction_compass} </div>
+                     <div class="location-date">Applicable Date: &nbsp; &nbsp; {hit.applicable_date} </div>
+                     <div class="location-predictability">Predictability: &nbsp; &nbsp; {hit.Predictability}% </div>
+                     <div class="location-timezone">Timezone: &nbsp; &nbsp; {hit.timezone} </div>
+                     <div class="location-sunrise">Sunrise: &nbsp; &nbsp; {hit.sun_rise} </div>
+                     <div class="location-sunset">Sunset: &nbsp; &nbsp; {hit.sun_set} </div>
+                    </div>
+
+    return isModal? <div> <div class="modal-parent" onClick={back}></div> {weather}</div> : <div> <div class="modal-parent" onClick={back}></div> {weather}</div> ;
   }
 }
 
@@ -156,7 +166,7 @@ class Weather extends React.Component{
 
   get_weather(props){
     let hit=sessionStorage.getItem(this.props.woeid);
-      fetch(`http://127.0.0.1:8000/router/weather?url=https://www.metaweather.com/api/location/${this.props.woeid}/`)
+      fetch(`${apiUrl}/router/weather?url=https://www.metaweather.com/api/location/${this.props.woeid}/`)
       .then(response=>response.json())
       .then(results=>{
         let json_results=JSON.stringify(results);
@@ -191,8 +201,12 @@ class Weather extends React.Component{
 class Search extends React.Component{
   constructor(props){
     super(props);
+    this.state={suggestions: []}
     this.search_weather=this.search_weather.bind(this);
     this.search_by_click=this.search_by_click.bind(this);
+    this.match=this.match.bind(this);
+    this.showSuggestions=this.showSuggestions.bind(this);
+    this.removeSuggestions=this.removeSuggestions.bind(this);
   }
 
   search_weather(event){
@@ -201,16 +215,50 @@ class Search extends React.Component{
     this.props.search(key);
   }
 
+  updateSuggestions(key){
+    fetch(`${apiUrl}/router/woeid?url=https://www.metaweather.com/api/location/search/?query=${key}`)
+    .then(response => response.json())
+    .then(results => this.setState({ suggestions: Object.values( JSON.parse( JSON.stringify(results) ).data ).map(val=>[ val.woeid, val.title] ) }) )
+    .catch(error => console.log(error));
+  }
+
+  match(e){
+    let key=e.target.value;
+    this.setState({key: key});
+    if(key===""){
+      this.setState({suggestions: []});
+      return
+    }
+    this.updateSuggestions(key);
+  }
+
+  showSuggestions(){
+    document.getElementById("search-results").style.display='inline-block';
+  }
+
+  removeSuggestions(){
+    let fnc= ()=>{document.getElementById("search-results").style.display='none'};
+    setTimeout(fnc, 200);
+  }
+
   search_by_click(){
     let key=document.getElementById("search_form").q.value;
     this.props.search(key);
   }
+
+
+  places(suggestions){
+    return suggestions.map( place => <Link class="result-link"  style={ {'color': 'black', 'text-decoration': 'none'} } key={`${place[0]}`}  to={{ pathname: `woeid/${place[0]}`, state: { modal: true } }} > {place[1]} </Link> );
+  }
   render(props){
     return <div id="search">
-              <form id="search_form" onSubmit={this.search_weather}>
-                <input id="search_bar" type="text" onChange={this.search_by_click} name="q" placeholder="Search Location..."/>
-                <input id="submit" type="submit" value=""/> <i id="search_icon" onClick={this.search_by_click} class="fas fa-search"></i>
+             <div id="search-container">
+              <form id="search_form" onSubmit={this.search_weather} method="get" action="/search">
+                <AutoComplete id="search-results" datalist={this.places(this.state.suggestions)} />
+                <input autocomplete="off" id="search-field" onBlur={this.removeSuggestions} onFocus={this.showSuggestions} list="places" id="search_bar" onChange={this.match} type="text"  name="q" placeholder="Search Location..."/>
+                <button id="submit" type="submit"><i id='search_icon' onClick={this.search_by_click} class="fa fa-search" ></i></button>
               </form>
+             </div>
            </div>;
   }
 }
@@ -227,4 +275,25 @@ class Footer extends React.Component{
 //present on current session(dissapear when browser closed)
 // sessionStorage.setItem('myData', data);
 // sessionStorage.getItem('myData');
-ReactDOM.render(<Ren/>, document.getElementById("root"));
+function suggestions(data){
+   return data.map(suggestion => <li> {suggestion} </li>)
+}
+
+function AutoComplete(props){
+  return <div id={props.id} class="autocomplete">
+            <ul class="suggestions">
+              {suggestions(props.datalist)}
+            </ul>
+          </div>
+}
+
+function Ren(prop) {
+  return <Router>
+              <Switch >
+              <Route exact path="/" component={Container} />
+              <Route exact path="/:woeid" component={WeatherModal} />
+              </Switch>
+         </Router>;
+}
+
+ReactDOM.render( <Router><Container/></Router>, document.getElementById("root"));
