@@ -10,20 +10,20 @@ class Container extends React.Component{
   constructor(props){
     super(props);
     this.state={key: false, long: 0, lat: 0, woeid: [] };
-    this.get_location();
-    this.search_woeid=this.search_woeid.bind(this);
-    this.get_local_weather=this.get_local_weather.bind(this);
+    this.getLocation();
+    this.searchWoeid=this.searchWoeid.bind(this);
+    this.getLocalWeather=this.getLocalWeather.bind(this);
   }
 
   componentDidMount(){
-    this.timerID=this.get_woeid();
+    this.timerID=this.getWoeid();
   }
 
   componentWillMount(){
      delete this.timerID;
   }
 
-  get_location(){
+  getLocation(){
     if (navigator.geolocation) {
        navigator.geolocation.getCurrentPosition(pos=> this.setState({lat: pos.coords.latitude, long: pos.coords.longitude}) );
      }
@@ -32,7 +32,7 @@ class Container extends React.Component{
     }
   }
 
-  get_woeid(){
+  getWoeid(){
     this.setState({woeid: []});
     fetch(`${apiUrl}/router/woeid?url=https://www.metaweather.com/api/location/search/?lattlong=${this.state.lat},${this.state.long}`)
     .then(response => response.json())
@@ -40,7 +40,7 @@ class Container extends React.Component{
     .catch(error => console.log(error));
   }
 
-  search_woeid(location){
+  searchWoeid(location){
     this.setState({woeid: []});
     fetch(`${apiUrl}/router/woeid?url=https://www.metaweather.com/api/location/search/?query=${location}`)
     .then(response => response.json())
@@ -48,25 +48,25 @@ class Container extends React.Component{
     .catch(error => console.log(error));
   }
 
-  get_local_weather(){
-    this.get_location();
-    this.get_woeid();
+  getLocalWeather(){
+    this.getLocation();
+    this.getWoeid();
   }
 
-  weather_list(woeid_lst){
+  weatherList(woeid_lst){
     return woeid_lst.map(woeid=> <li> <Link class="weather-link" style={ {'text-decoration': 'none'} } key={`${woeid}`}  to={{ pathname: `woeid/${woeid}`, state: { modal: true } }} > <Weather woeid={woeid} /> </Link></li> );
   }
 
   render(props){
     return <div id="container">
              <div id="contents">
-               <Search search={this.search_woeid}/>
-               <div onClick={this.get_local_weather} id="location">
+               <Search search={this.searchWoeid}/>
+               <div onClick={this.getLocalWeather} id="location">
                  <i class="fas fa-map-marker-alt"></i>
                  <div>Near by weather</div>
                </div>
                <ul id="weather_list">
-                  {this.weather_list(this.state.woeid)}
+                  {this.weatherList(this.state.woeid)}
                </ul>
                <Route exact path="/" component={null} />
                <Route path="/woeid/:woeid" component={WeatherModal} />
@@ -87,14 +87,14 @@ class WeatherModal extends React.Component{
   }
 
   componentDidMount(){
-    this.timerID=this.get_weather();
+    this.timerID=this.getWeather();
   }
 
   componentWillUnmount(){
      delete this.timerID;
   }
 
-  get_weather(props){
+  getWeather(props){
     let woeid=this.props.match.params.woeid;
     let hit=sessionStorage.getItem(this.props.match.params.woeid);
       fetch(`${apiUrl}/router/weather?url=https://www.metaweather.com/api/location/${woeid}/`)
@@ -138,7 +138,7 @@ class WeatherModal extends React.Component{
                      <div class="location-air_pressure">Air Pressure: &nbsp; &nbsp; {Math.round(hit.air_pressure)}mb </div>
                      <div class="location-wind_direction">Wind Direction: &nbsp; &nbsp; {hit.wind_speed} {hit.wind_direction_compass} </div>
                      <div class="location-date">Applicable Date: &nbsp; &nbsp; {hit.applicable_date} </div>
-                     <div class="location-predictability">Predictability: &nbsp; &nbsp; {hit.Predictability}% </div>
+                     <div class="location-predictability">Predictability: &nbsp; &nbsp; {hit.predictability}% </div>
                      <div class="location-timezone">Timezone: &nbsp; &nbsp; {hit.timezone} </div>
                      <div class="location-sunrise">Sunrise: &nbsp; &nbsp; {hit.sun_rise} </div>
                      <div class="location-sunset">Sunset: &nbsp; &nbsp; {hit.sun_set} </div>
@@ -157,14 +157,14 @@ class Weather extends React.Component{
   }
 
   componentDidMount(){
-    this.timerID=this.get_weather();
+    this.timerID=this.getWeather();
   }
 
   componentWillUnmount(){
      delete this.timerID;
   }
 
-  get_weather(props){
+  getWeather(props){
     let hit=sessionStorage.getItem(this.props.woeid);
       fetch(`${apiUrl}/router/weather?url=https://www.metaweather.com/api/location/${this.props.woeid}/`)
       .then(response=>response.json())
@@ -203,7 +203,7 @@ class Search extends React.Component{
     super(props);
     this.state={suggestions: []}
     this.search_weather=this.search_weather.bind(this);
-    this.search_by_click=this.search_by_click.bind(this);
+    this.searchByClick=this.searchByClick.bind(this);
     this.match=this.match.bind(this);
     this.showSuggestions=this.showSuggestions.bind(this);
     this.removeSuggestions=this.removeSuggestions.bind(this);
@@ -241,7 +241,7 @@ class Search extends React.Component{
     setTimeout(fnc, 200);
   }
 
-  search_by_click(){
+  searchByClick(){
     let key=document.getElementById("search_form").q.value;
     this.props.search(key);
   }
@@ -256,7 +256,7 @@ class Search extends React.Component{
               <form id="search_form" onSubmit={this.search_weather} method="get" action="/search">
                 <AutoComplete id="search-results" datalist={this.places(this.state.suggestions)} />
                 <input autocomplete="off" id="search-field" onBlur={this.removeSuggestions} onFocus={this.showSuggestions} list="places" id="search_bar" onChange={this.match} type="text"  name="q" placeholder="Search Location..."/>
-                <button id="submit" type="submit"><i id='search_icon' onClick={this.search_by_click} class="fa fa-search" ></i></button>
+                <button id="submit" type="submit"><i id='search_icon' onClick={this.searchByClick} class="fa fa-search" ></i></button>
               </form>
              </div>
            </div>;
