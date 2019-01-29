@@ -255,7 +255,7 @@ class Search extends React.Component{
              <div id="search-container">
               <form id="search_form" onSubmit={this.search_weather} method="get" action="/search">
                 <AutoComplete id="search-results" datalist={this.places(this.state.suggestions)} />
-                <input autocomplete="off" id="search-field" onBlur={this.removeSuggestions} onFocus={this.showSuggestions} list="places" id="search_bar" onChange={this.match} type="text"  name="q" placeholder="Search Location..."/>
+                <input autocomplete="off" onBlur={this.removeSuggestions} onFocus={this.showSuggestions} list="places" id="search_bar" onChange={this.match} type="text"  name="q" placeholder="Search Location..."/>
                 <button id="submit" type="submit"><i id='search_icon' onClick={this.searchByClick} class="fa fa-search" ></i></button>
               </form>
              </div>
