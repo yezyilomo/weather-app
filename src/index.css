@@ -33,6 +33,7 @@ body {
 #search_bar{
   width: 40%;
   height: 45px;
+  padding: 3px;
   background-color: #eeeeee;
   border-width: 0;
   text-align: center;
@@ -72,16 +73,16 @@ body {
   border: 0 solid gray;
   cursor: pointer;
   background-color: gray;
-  display: inline-flex;
+  display: inline-block;
   margin: 0;
-  padding: 0;
+  padding: 3px;
 }
 
 #search_icon{
   color: #494949;
   font-size: 1.7em;
   cursor: pointer;
-  margin-left: 10px;
+  margin-left: 5px;
 }
 
 .autocomplete{
