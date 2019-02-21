@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import {BrowserRouter as Router, Route, Link, Switch} from 'react-router-dom';
@@ -61,6 +61,7 @@ class Container extends React.Component{
     return <div id="container">
              <div id="contents">
                <Search search={this.searchWoeid}/>
+               <ToggleButton/>
                <div onClick={this.getLocalWeather} id="location">
                  <i class="fas fa-map-marker-alt"></i>
                  <div>Near by weather</div>
@@ -202,14 +203,14 @@ class Search extends React.Component{
   constructor(props){
     super(props);
     this.state={suggestions: []}
-    this.search_weather=this.search_weather.bind(this);
+    this.searchWeather=this.searchWeather.bind(this);
     this.searchByClick=this.searchByClick.bind(this);
     this.match=this.match.bind(this);
     this.showSuggestions=this.showSuggestions.bind(this);
     this.removeSuggestions=this.removeSuggestions.bind(this);
   }
 
-  search_weather(event){
+  searchWeather(event){
     event.preventDefault();
     let key=event.target.q.value;
     this.props.search(key);
@@ -253,9 +254,11 @@ class Search extends React.Component{
   render(props){
     return <div id="search">
              <div id="search-container">
-              <form id="search_form" onSubmit={this.search_weather} method="get" action="/search">
-                <AutoComplete id="search-results" datalist={this.places(this.state.suggestions)} />
-                <input autocomplete="off" onBlur={this.removeSuggestions} onFocus={this.showSuggestions} list="places" id="search_bar" onChange={this.match} type="text"  name="q" placeholder="Search Location..."/>
+              <form id="search_form" onSubmit={this.searchWeather} method="get" action="/search">
+                <SuggestionBox id="search-results" datalist={this.places(this.state.suggestions)} />
+                <input autocomplete="off" onBlur={this.removeSuggestions} onFocus={this.showSuggestions}
+                 list="places" id="search_bar" onChange={this.match} type="text"  name="q"
+                 placeholder="Search Location..."/>
                 <button id="submit" type="submit"><i id='search_icon' onClick={this.searchByClick} class="fa fa-search" ></i></button>
               </form>
              </div>
@@ -263,9 +266,36 @@ class Search extends React.Component{
   }
 }
 
+
+function ToggleButton(props){
+    let states = new Map()
+    states.set(false, 'left');
+    states.set(true, 'right');
+
+    let theme = new Map()
+    theme.set(false, 'unset');
+    theme.set(true, 'rgb(0, 0, 0, 0.8)');
+
+    let [buttonState, setButtonState] = useState(false);
+    let handleButtonToggle = (event) => {
+        setButtonState(!buttonState);
+        document.getElementById('container').style.backgroundColor = theme.get(!buttonState);
+    }
+
+  return <div class="toggle-button">
+            <div class="slider-container" onClick={handleButtonToggle}>
+                <div className={`slider ${states.get(buttonState)}`}></div>
+            </div>
+          </div>
+
+}
+
 class Footer extends React.Component{
+
   render(props){
-    return <div id="footer"> <div id="version">React Version: {React.version}</div> </div>
+    return <div id="footer">
+               <div id="version">React Version: {React.version}</div>
+           </div>
   }
 }
 //present when browser is closed and opened
@@ -279,8 +309,8 @@ function suggestions(data){
    return data.map(suggestion => <li> {suggestion} </li>)
 }
 
-function AutoComplete(props){
-  return <div id={props.id} class="autocomplete">
+function SuggestionBox(props){
+  return <div id={props.id} class="suggestionbox">
             <ul class="suggestions">
               {suggestions(props.datalist)}
             </ul>

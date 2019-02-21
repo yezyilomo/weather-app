@@ -13,9 +13,10 @@ body {
 #container{
   /*background-color: #eeeeee; */
   border: 0 solid gray;
-  margin: 30px auto 0 auto;
-  opacity: 1;
+  margin: 0;
+  padding: 30px 0 0 0;
   width: 100%;
+  transition: 1s ease background-color;
 }
 
 #contents{
@@ -85,7 +86,7 @@ body {
   margin-left: 5px;
 }
 
-.autocomplete{
+.suggestionbox{
  margin: 0;
  padding: 0;
  position: absolute;
@@ -289,4 +290,36 @@ body {
 #version{
   font-size: 0.8em;
   padding: 10px;
+}
+
+.toggle-button{
+  width: 70px;
+  padding: 5px;
+  float: right;
+  margin-right: 40px;
+}
+
+.slider-container{
+  width: 70px;
+  height: 25px;
+  overflow: hidden;
+  background-color: #eeeeee;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.slider{
+  height: 25px;
+  width: 25px;
+  border-radius: 12px;
+  background-color: black;
+  box-shadow: 0 0 3px black;
+  transition: 1s ease all;
+}
+
+.left{
+    float: left;
+}
+.right{
+    float: right;
 }
