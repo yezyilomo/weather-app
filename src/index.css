@@ -73,14 +73,19 @@ body {
   height: 45px;
   border: 0 solid gray;
   cursor: pointer;
-  background-color: gray;
+  background-color: #00687E;
   display: inline-block;
   margin: 0;
   padding: 3px;
+  transition: 0.5s ease background-color;
+}
+
+#submit:hover{
+  background-color: gray;
 }
 
 #search_icon{
-  color: #494949;
+  color: #dddddd;
   font-size: 1.7em;
   cursor: pointer;
   margin-left: 5px;
@@ -300,20 +305,21 @@ body {
 }
 
 .slider-container{
-  width: 70px;
-  height: 25px;
+  width: 60px;
+  height: 26px;
   overflow: hidden;
   background-color: #eeeeee;
-  border-radius: 12px;
+  border-radius: 14px;
   cursor: pointer;
+  padding: 3px;
+  transition: 1s ease background-color;
 }
 
 .slider{
-  height: 25px;
-  width: 25px;
-  border-radius: 12px;
+  height: 26px;
+  width: 26px;
+  border-radius: 50%;
   background-color: black;
-  box-shadow: 0 0 3px black;
   transition: 1s ease all;
 }
 
