@@ -6,6 +6,33 @@ import {BrowserRouter as Router, Route, Link, Switch} from 'react-router-dom';
 let apiUrl='http://127.0.0.1:8000';
 //let apiUrl='http://c2303014.ngrok.io';
 
+function ToggleButton(props){
+    let states = new Map()
+    states.set(false, 'left');
+    states.set(true, 'right');
+
+    let theme = new Map()
+    theme.set(false, 'unset');
+    theme.set(true, 'rgb(0, 0, 0, 0.8)');
+
+    let bgColor = new Map()
+    bgColor.set(false, 'white');
+    bgColor.set(true, '#00687E');
+
+    let [buttonState, setButtonState] = useState(false);
+    let handleButtonToggle = (event) => {
+        setButtonState(!buttonState);
+        document.getElementById('container').style.backgroundColor = theme.get(!buttonState);
+    }
+
+  return <div class="toggle-button">
+            <div class="slider-container" onClick={handleButtonToggle} style={{'background-color': bgColor.get(buttonState)}}>
+                <div className={`slider ${states.get(buttonState)}`}></div>
+            </div>
+          </div>
+}
+
+
 class Container extends React.Component{
   constructor(props){
     super(props);
@@ -266,29 +293,6 @@ class Search extends React.Component{
   }
 }
 
-
-function ToggleButton(props){
-    let states = new Map()
-    states.set(false, 'left');
-    states.set(true, 'right');
-
-    let theme = new Map()
-    theme.set(false, 'unset');
-    theme.set(true, 'rgb(0, 0, 0, 0.8)');
-
-    let [buttonState, setButtonState] = useState(false);
-    let handleButtonToggle = (event) => {
-        setButtonState(!buttonState);
-        document.getElementById('container').style.backgroundColor = theme.get(!buttonState);
-    }
-
-  return <div class="toggle-button">
-            <div class="slider-container" onClick={handleButtonToggle}>
-                <div className={`slider ${states.get(buttonState)}`}></div>
-            </div>
-          </div>
-
-}
 
 class Footer extends React.Component{
 
