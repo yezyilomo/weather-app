@@ -1,10 +1,10 @@
 {
-  "name": "react_app",
-  "version": "0.1.0",
+  "name": "weather_app",
+  "version": "10.1.1",
   "private": true,
   "dependencies": {
-    "react": "^16.4.2",
-    "react-dom": "^16.4.2",
+    "react": "^16.8.1",
+    "react-dom": "^16.8.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4"
   },
