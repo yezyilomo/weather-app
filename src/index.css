@@ -138,20 +138,22 @@ body {
   margin: 10px auto 0 auto;
   width: 180px;
   color: #494949;
+  transition: .5s ease color;
 }
 
 #location i{
   font-size: 2em;
   color: #494949;
+  transition: .5s ease color;
 }
 
 #location:hover {
-  color: black;
+  color: #00687E;
   cursor: pointer;
 }
 
 #location:hover i {
-  color: black;
+  color: #00687E;
   cursor: pointer;
 }
 
