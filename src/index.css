@@ -58,6 +58,9 @@ body {
   #search_bar{
     width: 80%;
   }
+  .suggestionbox{
+    width: 80.4%;
+  }
   #search_bar:focus{
     width: 80%;
   }
@@ -97,11 +100,17 @@ body {
  position: absolute;
  top: 76px;
  display: inline-block;
- width: 43.4%;
+ width: 43.6%;
  max-height: 378px;
  overflow-y: auto;
  background-color: white;
  border: 0px solid #eeeeee;
+}
+
+@media (max-width: 800px) {
+  .suggestionbox{
+    width: 81%;
+  }
 }
 
 #search-results{
