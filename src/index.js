@@ -317,9 +317,11 @@ class Search extends React.Component {
     constructor(props) {
         super(props);
         this.state = { suggestions: [] }
+        this.match = this.match.bind(this);
+        this.showSpinner = this.showSpinner.bind(this);
+        this.removeSpinner = this.removeSpinner.bind(this);
         this.searchWeather = this.searchWeather.bind(this);
         this.searchByClick = this.searchByClick.bind(this);
-        this.match = this.match.bind(this);
         this.showSuggestions = this.showSuggestions.bind(this);
         this.removeSuggestions = this.removeSuggestions.bind(this);
     }
@@ -330,6 +332,14 @@ class Search extends React.Component {
         this.props.search(key);
     }
 
+    removeSpinner(){
+        document.getElementById("load-search").style.display = "none";
+    }
+
+    showSpinner(){
+        document.getElementById("load-search").style.display = "inline-block";
+    }
+
     updateSuggestions(key) {
         fetch(`${proxyURL}/router/woeid?url=${apiURL}/location/search/?query=${key}`)
             .then(response => response.json())
@@ -337,16 +347,18 @@ class Search extends React.Component {
             .then(results => this.setState(
                 { suggestions: results.map(val => [val.woeid, val.title]) }
             ))
+            .then(results => this.removeSpinner() )
             .catch(error => console.log(error));
     }
 
     match(e) {
         let key = e.target.value;
-        this.setState({ key: key });
         if (key === "") {
             this.setState({ suggestions: [] });
+            this.removeSpinner();
             return
         }
+        this.showSpinner();
         this.updateSuggestions(key);
     }
 
@@ -383,8 +395,9 @@ class Search extends React.Component {
                         <input autocomplete="off" onBlur={this.removeSuggestions} onFocus={this.showSuggestions}
                             list="places" id="search_bar" onChange={this.match} type="text" name="q"
                             placeholder="Search Location..." />
+                        <i id="load-search" class="fa fa-circle-notch fa-spin"/>
                         <button id="submit" type="submit">
-                            <i id='search_icon' onClick={this.searchByClick} class="fa fa-search" ></i>
+                            <i id='search_icon' onClick={this.searchByClick} className="fa fa-search" ></i>
                         </button>
                     </form>
                 </div>

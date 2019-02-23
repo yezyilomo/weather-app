@@ -87,6 +87,18 @@ body {
   background-color: gray;
 }
 
+#load-search{
+  position: absolute;
+  margin-left: -25px;
+  margin-top: 15px;
+  color: gray;
+  display: none;
+}
+
+.fa-spin{
+  animation-duration: 0.8s;
+}
+
 #search_icon{
   color: #dddddd;
   font-size: 1.7em;
