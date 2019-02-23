@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
@@ -38,6 +38,7 @@ function IfMap(conds, actions, notFound = null) {
 
 }
 
+
 function If() {
     let props = arguments[0];
     if (props.cond !== undefined && props.children !== undefined) {
@@ -50,31 +51,70 @@ function If() {
 }
 
 
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+
+function setThemeCookie(theme = false) {
+    let intStates = new Map();
+    intStates.set(false, 0);
+    intStates.set(true, 1);
+    theme = intStates.get(theme);
+    var d = new Date();
+    d.setTime(d.getTime() + 30 * 24 * 60 * 60 * 1000); // in milliseconds
+    document.cookie = `theme=${theme};path=/;expires=${d.toGMTString()};SameSite=Lax;`;
+}
+
+function getThemeCookie() {
+    let theme = getCookie('theme');
+    if (theme === null) {
+        return null;
+    }
+    theme = parseInt(theme, 10);
+    theme = Boolean(theme);
+    return theme;
+}
+
+
 function ToggleButton(props) {
-    let states = new Map();
-    states.set(false, 'left');
-    states.set(true, 'right');
+    let themeStates = new Map();
+    themeStates.set(false, { className: 'left', themeColor: 'unset', buttonColor: 'white' });
+    themeStates.set(true, { className: 'right', themeColor: 'rgb(0, 0, 0, 0.8)', buttonColor: '#00687E' });
 
-    let theme = new Map()
-    theme.set(false, 'unset');
-    theme.set(true, 'rgb(0, 0, 0, 0.8)');
+    let savedTheme = getThemeCookie();
+    if (savedTheme === null) {
+        setThemeCookie(false);
+        savedTheme = false;
+    }
 
-    let bgColor = new Map()
-    bgColor.set(false, 'white');
-    bgColor.set(true, '#00687E');
-
-    let [buttonState, setButtonState] = useState(false);
-    let handleButtonToggle = (event) => {
-        setButtonState(!buttonState);
+    let [theme, setTheme] = useState(savedTheme);
+    useEffect(() => {
         let container = document.getElementById('container');
-        container.style.backgroundColor = theme.get(!buttonState);
+        container.style.backgroundColor = themeStates.get(theme).themeColor;
+    });
+
+    let handleButtonToggle = (event) => {
+        setThemeCookie(!theme);
+        setTheme(!theme);
     }
 
     return (
         <div class="toggle-button">
             <div class="slider-container" onClick={handleButtonToggle}
-                style={{ 'background-color': bgColor.get(buttonState) }}>
-                <div className={`slider ${states.get(buttonState)}`}></div>
+                style={{ 'background-color': themeStates.get(theme).buttonColor }}>
+                <div className={`slider ${themeStates.get(theme).className}`}></div>
             </div>
         </div>
     );
@@ -227,7 +267,7 @@ class WeatherModal extends React.Component {
         }
         let back = e => { e.stopPropagation(); this.props.history.goBack(); };
         const styles = {
-            'background-image': `url("https://www.metaweather.com/static/img/weather/${hit.weather_state_abbr}.svg")` 
+            'background-image': `url("https://www.metaweather.com/static/img/weather/${hit.weather_state_abbr}.svg")`
         };
 
         return (
@@ -299,8 +339,8 @@ class Weather extends React.Component {
         else {
             hit = this.state.weather;
         }
-        const styles = { 
-            'background-image': `url("https://www.metaweather.com/static/img/weather/${hit.weather_state_abbr}.svg")` 
+        const styles = {
+            'background-image': `url("https://www.metaweather.com/static/img/weather/${hit.weather_state_abbr}.svg")`
         };
         return (
             <div class="weather" style={styles}>
@@ -312,6 +352,7 @@ class Weather extends React.Component {
             </div>);
     }
 }
+
 
 class Search extends React.Component {
     constructor(props) {
@@ -332,11 +373,11 @@ class Search extends React.Component {
         this.props.search(key);
     }
 
-    removeSpinner(){
+    removeSpinner() {
         document.getElementById("load-search").style.display = "none";
     }
 
-    showSpinner(){
+    showSpinner() {
         document.getElementById("load-search").style.display = "inline-block";
     }
 
@@ -347,7 +388,7 @@ class Search extends React.Component {
             .then(results => this.setState(
                 { suggestions: results.map(val => [val.woeid, val.title]) }
             ))
-            .then(results => this.removeSpinner() )
+            .then(results => this.removeSpinner())
             .catch(error => console.log(error));
     }
 
@@ -367,8 +408,8 @@ class Search extends React.Component {
     }
 
     removeSuggestions() {
-        let fnc = () => { 
-            document.getElementById("search-results").style.display = 'none' 
+        let fnc = () => {
+            document.getElementById("search-results").style.display = 'none'
         };
         setTimeout(fnc, 200);
     }
@@ -395,7 +436,7 @@ class Search extends React.Component {
                         <input autocomplete="off" onBlur={this.removeSuggestions} onFocus={this.showSuggestions}
                             list="places" id="search_bar" onChange={this.match} type="text" name="q"
                             placeholder="Search Location..." />
-                        <i id="load-search" class="fa fa-circle-notch fa-spin"/>
+                        <i id="load-search" class="fa fa-circle-notch fa-spin" />
                         <button id="submit" type="submit">
                             <i id='search_icon' onClick={this.searchByClick} className="fa fa-search" ></i>
                         </button>
@@ -438,15 +479,5 @@ function SuggestionBox(props) {
     );
 }
 
-function Ren(prop) {
-    return (
-        <Router>
-            <Switch >
-                <Route exact path="/" component={Container} />
-                <Route exact path="/:woeid" component={WeatherModal} />
-            </Switch>
-        </Router>
-    );
-}
 
 ReactDOM.render(<Router><Container /></Router>, document.getElementById("root"));
