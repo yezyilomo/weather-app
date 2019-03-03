@@ -38,7 +38,7 @@ function WeatherTile(props) {
         'background-image': `url("https://www.metaweather.com/static/img/weather/${weather.weather_state_abbr}.svg")`
     };
     return (
-        <div class="weather" style={styles}>
+        <div class="weather-tile" style={styles}>
             <div class="location"> <span>{weather.title}</span> </div>
             <div class="temperature"> {Math.round(weather.the_temp)} ℃ </div>
             <div class="weather_state_name"> {weather.weather_state_name} </div>
