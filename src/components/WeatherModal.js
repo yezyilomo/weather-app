@@ -11,7 +11,6 @@ function WeatherModal(props) {
 
     let getWeather = () => {
         let woeid = props.match.params.woeid;
-        let hit = sessionStorage.getItem(props.match.params.woeid);
         fetch(`${proxyURL}/router/weather?url=${apiURL}/location/${woeid}/`)
             .then(response => response.json())
             .then(results => {

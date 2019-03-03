@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {WeatherTile, apiURL, proxyURL, Block, SearchBox, ToggleButton, WeatherModal, Footer} from './';
-import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
+import {Route, Link } from 'react-router-dom';
 
 
 function weatherTiles(woeid_lst) {
@@ -83,7 +83,7 @@ function Home(props) {
                 <ul id="weather_list">
                     {woeid === null? 
                         <Block><div style={styles}>Loading....</div></Block>: 
-                     woeid.length == 0?
+                     woeid.length === 0?
                         <Block><div style={styles}>No results found....</div></Block>:
                         <Block>{weatherTiles(woeid)}</Block>   
                     }
