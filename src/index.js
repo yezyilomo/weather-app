@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import {Home} from './components';
-import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
+import {BrowserRouter as Router} from 'react-router-dom';
 
 //present when browser is closed and opened
 //localStorage.setItem(777, 'hello there');

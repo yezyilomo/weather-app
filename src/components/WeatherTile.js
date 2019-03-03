@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {apiURL, proxyURL, SuggestionBox} from './';
+import {apiURL, proxyURL} from './';
 
 // Weather tile
 function WeatherTile(props) {
@@ -10,7 +10,6 @@ function WeatherTile(props) {
     })
 
     let getWeather = () => {
-        let hit = sessionStorage.getItem(props.woeid);
         fetch(`${proxyURL}/router/weather?url=${apiURL}/location/${props.woeid}/`)
             .then(response => response.json())
             .then(results => {
