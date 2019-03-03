@@ -190,7 +190,7 @@ body {
     margin: 0 auto 0 auto;
 }
 
-.weather{
+.weather-tile{
   width: 300px;
   height: 250px;
   background-color: #eeeeee;
@@ -204,7 +204,13 @@ body {
   color: #494949;
 }
 
-.weather:hover{
+@media (max-width: 330px) {
+  .weather-tile{
+    width: 290px;
+  }
+}
+
+.weather-tile:hover{
   animation-name: anim;
   animation-duration: 1s;
   animation-delay: 0;
@@ -321,9 +327,9 @@ body {
 
 .toggle-button{
   width: 70px;
-  padding: 5px;
+  padding: 20px 5px 5px 5px;
   float: right;
-  margin-right: 40px;
+  margin-right: 30px;
 }
 
 .slider-container{
