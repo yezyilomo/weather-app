@@ -48,7 +48,7 @@ function ToggleButton(props) {
         savedTheme = false;
     }
 
-    let [theme, setTheme] = useState(true);
+    let [theme, setTheme] = useState(savedTheme);
     useEffect(() => {
         let container = document.getElementById('container');
         container.style.backgroundColor = themeStates.get(theme).themeColor;
