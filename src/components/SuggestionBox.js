@@ -8,7 +8,7 @@ function getSuggestions(data) {
 
 function SuggestionBox(props) {
     return (
-        <div id={props.id} class="suggestionbox">
+        <div id="search-results" class="suggestionbox">
             <ul class="suggestions">
                 {getSuggestions(props.datalist)}
             </ul>

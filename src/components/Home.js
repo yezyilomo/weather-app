@@ -51,6 +51,7 @@ function Home(props) {
         fetch(`${proxyURL}/router/woeid?url=${apiURL}/location/search/?query=${key}`)
             .then(response => response.json())
             .then(results => Object.values(JSON.parse(JSON.stringify(results)).data))
+            .then(results => results.slice(0,12))
             .then(results => setWoeid(
                 results.map(val => val.woeid)
             ))
@@ -72,17 +73,25 @@ function Home(props) {
     };
 
     return (
-        <div id="container">
+        <div id="home-container">
             <div id="contents">
                 <SearchBox search={searchWoeid} />
-                <ToggleButton />
-                <div onClick={getLocalWoeid} id="location">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <div>Near by weather</div>
+                <div class="text-center mt-3">
+                    <div onClick={getLocalWoeid} id="location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>Near by weather</div>
+                    </div>
+                    <ToggleButton />
                 </div>
                 <ul id="weather_list">
                     {woeid === null? 
-                        <Block><div style={styles}>Loading....</div></Block>: 
+                        <Block>
+                            <div style={styles}>
+                                <div class="spinner-border text-light" role="status">
+                                </div>
+                                <div>Loading..</div>
+                            </div>
+                        </Block> : 
                      woeid.length === 0?
                         <Block><div style={styles}>No results found....</div></Block>:
                         <Block>{weatherTiles(woeid)}</Block>   

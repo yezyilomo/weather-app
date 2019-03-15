@@ -1,3 +1,5 @@
+* {box-sizing: border-box;}
+
 body {
   margin: 0;
   padding: 0;
@@ -10,11 +12,12 @@ body {
   min-width: 300px;
 }
 
-#container{
+#home-container{
   border: 0 solid gray;
   margin: 0;
   padding: 30px 0 0 0;
   width: 100%;
+  overflow: visible;
   transition: 1s ease background-color;
 }
 
@@ -22,18 +25,9 @@ body {
   min-height: calc(100vh - 280px);
 }
 
-#search{
-  text-align: center;
-}
-#search-container{
-  height: 45px;
-  overflow: hidden;
-  margin: 0 auto 0 auto;
-}
 #search_bar{
-  width: 40%;
+  width: 43%;
   height: 45px;
-  padding: 3px;
   background-color: #eeeeee;
   border-width: 0;
   text-align: center;
@@ -41,15 +35,30 @@ body {
   transition-property: width background-color;
   transition-duration: 0.6s;
   transition-timing-function: ease-in;
-  display: inline-flex;
   position: relative;
-  bottom: 5px;
   font-family: 'Comfortaa', cursive;
+  border-radius: 2px 0 0 2px;
+}
+
+#submit{
+  width: 50px;
+  height: 45px;
+  border-width: 0;
+  cursor: pointer;
+  background-color: #00687E;
+  margin: 0;
+  padding: 0;
+  transition: 0.5s ease background-color;
+  border-radius: 0 2px 2px 0;
+}
+
+#submit:hover{
+  background-color: gray;
 }
 
 #search_bar:focus {
   text-align: left;
-  width: 43%;
+  width: 45%;
   background-color: white;
 }
 
@@ -58,7 +67,7 @@ body {
     width: 80%;
   }
   .suggestionbox{
-    width: 80.4%;
+    width: 80%;
   }
   #search_bar:focus{
     width: 80%;
@@ -70,26 +79,10 @@ body {
   100%{text-align: left;}
 }
 
-#submit{
-  width: 50px;
-  height: 45px;
-  border: 0 solid gray;
-  cursor: pointer;
-  background-color: #00687E;
-  display: inline-block;
-  margin: 0;
-  padding: 3px;
-  transition: 0.5s ease background-color;
-}
-
-#submit:hover{
-  background-color: gray;
-}
-
 #load-search{
   position: absolute;
-  margin-left: -25px;
-  margin-top: 15px;
+  margin-left: -35px;
+  margin-top: 10px;
   color: gray;
   display: none;
 }
@@ -100,9 +93,10 @@ body {
 
 #search_icon{
   color: #dddddd;
-  font-size: 1.7em;
+  font-size: 1.2em;
   cursor: pointer;
-  margin-left: 5px;
+  position: relative;
+  top: 3px;
 }
 
 .suggestionbox{
@@ -111,11 +105,13 @@ body {
  position: absolute;
  top: 76px;
  display: inline-block;
- width: 43.6%;
- max-height: 378px;
+ width: 45%;
+ max-height: 385px;
  overflow-y: auto;
  background-color: white;
- border: 0px solid #eeeeee;
+ border-radius: 0 0 2px 2px;
+ overflow: auto;
+ z-index: 4;
 }
 
 @media (max-width: 800px) {
@@ -124,13 +120,15 @@ body {
   }
 }
 
-#search-results{
+.suggestionbox{
   display: none;
 }
 
 .result-link{
   display: block;
   padding: 12px 0 12px 0;
+  text-decoration: none;
+  color: unset;
 }
 
 .result-link:focus, .weather-link{
@@ -153,12 +151,19 @@ body {
   background-color: #00687E;
 }
 
+.suggestions li:hover a{
+  color: unset;
+  display: block;
+  padding: 12px 0 12px 0;
+  text-decoration: none;
+}
+
 #location{
   text-align: center;
-  margin: 10px auto 0 auto;
   width: 180px;
   color: #494949;
   transition: .5s ease color;
+  display: inline-block;
 }
 
 #location i{
@@ -177,6 +182,44 @@ body {
   cursor: pointer;
 }
 
+.toggle-button{
+  width: 70px;
+  padding: 5px;
+  display: inline-block;
+  position: absolute;
+  right: 0;
+}
+
+.slider-container{
+  width: 60px;
+  height: 26px;
+  overflow: hidden;
+  background-color: #eeeeee;
+  border-radius: 14px;
+  cursor: pointer;
+  padding: 3px;
+  box-sizing: content-box;
+  transition: 1s ease background-color;
+}
+
+.slider{
+  height: 26px;
+  width: 26px;
+  border-radius: 50%;
+  background-color: black;
+  transition: 0.7s ease all;
+}
+
+.left{
+    position: relative;
+    left: 1px;
+}
+.right{
+    position: relative;
+    left: 33px;
+
+}
+
 #weather_list{
   padding: 0;
   margin: 0;
@@ -192,35 +235,28 @@ body {
 
 .weather-tile{
   width: 300px;
-  height: 250px;
+  height: auto;
   background-color: #eeeeee;
   border: 0 solid #eeeeee;
-  margin: 20px auto 0 auto;
+  margin: 15px auto 0 auto;
   padding: 10px;
   border-radius: 2px;
-  background-position: 120px 40px;
+  background-position: 100px 40px;
   background-size: 190px 190px;
   background-repeat: no-repeat;
   color: #494949;
+  cursor: pointer;
+  transition: 0.5s ease all;
+}
+
+.weather-tile:hover{
+  background-color: white;
 }
 
 @media (max-width: 330px) {
   .weather-tile{
     width: 290px;
   }
-}
-
-.weather-tile:hover{
-  animation-name: anim;
-  animation-duration: 1s;
-  animation-delay: 0;
-  animation-fill-mode: forwards;
-  cursor: pointer;
-}
-
-@keyframes anim {
-    0%{background-color: #eeeeee; color: #494949;}
-    100%{background-color: white; color: #494949;}
 }
 
 .location{
@@ -230,7 +266,7 @@ body {
 .temperature{
   text-align: left;
   margin-left: 20px;
-  padding: 40px 0 30px 0;
+  padding: 0 0 20px 0;
   font-size: 3em;
 }
 
@@ -253,33 +289,31 @@ body {
   bottom: 0;
   right: 0;
   background: rgba(0, 0, 0, 0.6);
-  z-index: 2;
+  z-index: 5;
 }
 
-.location-weather{
+.modal-contents{
   position: fixed;
-  top: 0;
+  top: 30px;
   left: 0;
-  bottom: 0;
+  bottom: 30px;
   right: 0;
+  margin: 0 auto 0 auto;
   z-index: 10;
-  max-width: 100%;
-  height: 88vh;
   background-color: white;
-  border: 20px solid white;
-  margin: 10px;
-  padding: 0 0 20px 0;
-  border-radius: 2px;
-  background-position: right 0px;
+  border: 5px solid white;
+  border-radius: 3px;
+  background-position: right 50px;
   background-size: 50%;
   background-repeat: no-repeat;
   color: #494949;
-  overflow: hidden;
+  overflow: auto;
 }
 .close-icon{
   float: right;
   cursor: pointer;
   position: relative;
+  top: 10px;
 }
 .close-icon i{
   font-size: 1.5em;
@@ -308,8 +342,8 @@ body {
   font-weight: bold;
 }
 
-.location-weather [class^=location]{
-  padding: 10px 0 10px 0;
+.modal-contents [class^=location]{
+  padding: 5px 0 5px 0;
   text-align: left;
 }
 
@@ -323,37 +357,4 @@ body {
 #version{
   font-size: 0.8em;
   padding: 10px;
-}
-
-.toggle-button{
-  width: 70px;
-  padding: 20px 5px 5px 5px;
-  float: right;
-  margin-right: 30px;
-}
-
-.slider-container{
-  width: 60px;
-  height: 26px;
-  overflow: hidden;
-  background-color: #eeeeee;
-  border-radius: 14px;
-  cursor: pointer;
-  padding: 3px;
-  transition: 1s ease background-color;
-}
-
-.slider{
-  height: 26px;
-  width: 26px;
-  border-radius: 50%;
-  background-color: black;
-  transition: 1s ease all;
-}
-
-.left{
-    float: left;
-}
-.right{
-    float: right;
 }
