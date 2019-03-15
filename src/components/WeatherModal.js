@@ -50,9 +50,9 @@ function WeatherModal(props) {
     return (
         <Block>
             {isModal ?
-                <div>
+                <Block>
                     <div class="modal-parent" onClick={back}></div>
-                    <div class="location-weather" style={styles}>
+                    <div class="modal-contents col-11 col-sm-10 col-md-9" style={styles}>
                         <span class="close-icon" onClick={back}><i class="fas fa-times"></i> </span>
                         <div class="location-location"> <span>{weather.title}</span> </div>
                         <div class="location-temperature"> {Math.round(weather.the_temp)} ℃ </div>
@@ -68,7 +68,7 @@ function WeatherModal(props) {
                         <div class="location-sunrise">Sunrise: &nbsp; &nbsp; {weather.sun_rise} </div>
                         <div class="location-sunset">Sunset: &nbsp; &nbsp; {weather.sun_set} </div>
                     </div>
-                </div> : null
+                </Block> : null
             }
         </Block>
     );

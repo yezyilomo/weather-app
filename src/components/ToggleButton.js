@@ -50,7 +50,7 @@ function ToggleButton(props) {
 
     let [theme, setTheme] = useState(savedTheme);
     useEffect(() => {
-        let container = document.getElementById('container');
+        let container = document.getElementById('home-container');
         container.style.backgroundColor = themeStates.get(theme).themeColor;
     }, [theme]);
 
@@ -60,7 +60,7 @@ function ToggleButton(props) {
     }
 
     return (
-        <div class="toggle-button">
+        <div class="toggle-button mr-2 mr-sm-4 mr-md-5">
             <div class="slider-container" onClick={handleButtonToggle}
                 style={{ 'background-color': themeStates.get(theme).buttonColor }}>
                 <div className={`slider ${themeStates.get(theme).className}`}></div>

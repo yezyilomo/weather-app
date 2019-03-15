@@ -25,8 +25,7 @@ function removeSuggestions() {
 
 function getPlaces(suggestions) {
     return suggestions.map(place => (
-        <Link class="result-link" style={{ 'color': 'black', 'text-decoration': 'none' }}
-            key={`${place[0]}`} to={{ pathname: `woeid/${place[0]}`, state: { modal: true } }} >
+        <Link class="result-link" key={`${place[0]}`} to={{ pathname: `woeid/${place[0]}`, state: { modal: true } }} >
             {place[1]}
         </Link>
     ));
@@ -39,6 +38,7 @@ function SearchBox(props) {
         fetch(`${proxyURL}/router/woeid?url=${apiURL}/location/search/?query=${key}`)
             .then(response => response.json())
             .then(results => Object.values(JSON.parse(JSON.stringify(results)).data))
+            .then(results => results.slice(0,8))
             .then(results => setSuggestions(
                 results.map(val => [val.woeid, val.title])
             ))
@@ -58,25 +58,30 @@ function SearchBox(props) {
     }
 
     let searchWeather = (event) => {
+        removeSpinner();
+        removeSuggestions();
         event.preventDefault();
         let key = event.target.q.value;
         props.search(key);
     }
-
+    const styles = {
+        'height': '1.5rem',
+        'width': '1.5rem',
+        'border-width': '2px'
+    };
     return (
-        <div id="search">
-            <div id="search-container">
-                <form id="search_form" onSubmit={searchWeather} method="get" action="/search">
-                    <SuggestionBox id="search-results" datalist={getPlaces(suggestions)} />
-                    <input autocomplete="off" onBlur={removeSuggestions} onFocus={showSuggestions}
-                        list="places" id="search_bar" onChange={getSuggestions} type="text" name="q"
-                        placeholder="Search Location..." />
-                    <i id="load-search" class="fa fa-circle-notch fa-spin" />
-                    <button id="submit" type="submit">
-                        <i id='search_icon' className="fa fa-search" ></i>
-                    </button>
-                </form>
-            </div>
+        <div class="text-center">
+            <form onSubmit={searchWeather} method="get" action="/search">
+                <SuggestionBox datalist={getPlaces(suggestions)} />
+                <input autocomplete="off" onBlur={removeSuggestions} onFocus={showSuggestions}
+                    list="places" id="search_bar" onChange={getSuggestions} type="text" name="q"
+                    placeholder="Search Location..." />
+                <div id="load-search" class="spinner-border text-secondary" role="status" style={styles}>
+                </div>
+                <button id="submit" type="submit">
+                    <i id='search_icon' className="fa fa-search" ></i>
+                </button>
+            </form>
         </div>
     );
 }
