@@ -37,7 +37,7 @@ function SearchBox(props) {
     
     let updateSuggestions = (key, results) => {
         // Ensure safe update
-        if(key == keyword){
+        if(key === keyword){
             setSuggestions(
                 results.map(data => [data.woeid, data.title])
             )
