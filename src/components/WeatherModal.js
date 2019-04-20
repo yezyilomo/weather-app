@@ -35,7 +35,7 @@ function WeatherModal(props) {
         }
     }, [])
 
-    let isModal = false;
+    let isModal;
     try {
         isModal = props.location.state.modal;
     }
