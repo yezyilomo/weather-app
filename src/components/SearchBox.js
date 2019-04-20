@@ -33,28 +33,40 @@ function getPlaces(suggestions) {
 
 function SearchBox(props) {
     let [suggestions, setSuggestions] = useState([]);
+    let keyword = ""; 
+    
+    let updateSuggestions = (key, results) => {
+        // Ensure safe update
+        if(key == keyword){
+            setSuggestions(
+                results.map(data => [data.woeid, data.title])
+            )
+            return true;
+        }
+        return false;
+    }
 
-    let updateSuggestions = (key) => {
+    let fetchSuggestions = (key) => {
         fetch(`${proxyURL}/router/woeid?url=${apiURL}/location/search/?query=${key}`)
             .then(response => response.json())
             .then(results => Object.values(JSON.parse(JSON.stringify(results)).data))
             .then(results => results.slice(0,8))
-            .then(results => setSuggestions(
-                results.map(val => [val.woeid, val.title])
-            ))
-            .then(results => removeSpinner())
+            .then(results => updateSuggestions(key, results))
+            .then(isUpdated => isUpdated && removeSpinner())
+            .then(results => showSuggestions()) // because of removeSuggestions on searchWather
             .catch(error => console.log(error));
     }
     
     let getSuggestions = (event) => {
-        let key = event.target.value;
+        let key = event.target.value.trim();
+        keyword = key;
         if (key === "") {
             setSuggestions([]);
             removeSpinner();
             return
         }
         showSpinner();
-        updateSuggestions(key);
+        fetchSuggestions(key);
     }
 
     let searchWeather = (event) => {
